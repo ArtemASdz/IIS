@@ -1,3 +1,5 @@
 *.csv
 *.pkl
 .venv*/
+mlruns.db
+*mlartifacts*
