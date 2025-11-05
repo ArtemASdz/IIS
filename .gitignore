@@ -3,3 +3,7 @@
 .venv*/
 mlruns.db
 *mlartifacts*
+__pycache__/
+*.pyc
+*.pyo
+*.pyd

@@ -69,3 +69,89 @@
     <li><b>Тэг:</b> stage=Production</li>
 </ul>
 <p>Модель обучена на полной выборке и готова к использованию</p>
+<h1>ML Service для предсказания сердечных заболеваний</h1>
+<h2>Описание сервиса</h2>
+<p>Сервис машинного обучения для предсказания вероятности сердечных заболеваний на основе медицинских параметров пациента. Реализован как REST API сервис с использованием FastAPI.</p>
+<h1>Структура папки ml_service</h1>
+<p>__pycache__/           # Кэш-папка Python (автогенерируемая)<br>
+├── __init__.py            # Пакетный файл Python <br>
+├── api_handler.py         # Обработчики API endpoints и маршрутизация <br>
+├── Dockerfile             # Конфигурация Docker образа <br>
+├── main.py                # Основной файл FastAPI приложения <br>
+└── requirements.txt       # Зависимости Python</p>
+<h1>Структура папки models</h1>
+<p>models/
+├── __pycache__/           # Кэш-папка Python (автогенерируемая)<br>
+├── __init__.py            # Пакетный файл Python<br>
+├── get_model.py           # Логика загрузки и управления моделями<br>
+└── model.pkl              # Сохраненная модель машинного обучения</p>
+<h1>Установка и запуск</h1>
+<h2>1. Сборка Docker образа</h2>
+<p># Перейдите в папку сервиса <br>
+cd ~/my_proj/services/ml_service<br>
+sudo docker build -t heart-disease-predictor:1 .</p>
+<h2>2. Запуск контейнера</h2>
+<p>#  Запустите контейнер с пробросом портов <br>
+sudo docker run -p 8001:8000 -v $(pwd)/../models:/models heart-disease-predictor:1</p>
+<p>Сервис будет доступен по адресу: http://localhost:8001</p>
+<h1>Проверка работоспособности</h1>
+<h2>1. Проверка статуса сервиса</h2>
+<p># Проверка здоровья сервиса<br>
+curl http://localhost:8001/<br>
+curl http://localhost:8001/api/model_status</p>
+<h2>2. Пример предсказания</h2>
+<p>URL: POST http://localhost:8001/api/prediction?item_id=1</p>
+<p>Тело запроса (JSON):</p>
+<p>{
+  "age": 52,
+  "sex": 1,
+  "cp": 0,
+  "trestbps": 125,
+  "chol": 212,
+  "fbs": 0,
+  "restecg": 1,
+  "thalach": 168,
+  "exang": 0,
+  "oldpeak": 1.0,
+  "slope": 2,
+  "ca": 2,
+  "thal": 3
+}</p>
+<p>Пример выполнения через curl:</p>
+<p>curl -X POST "http://localhost:8001/api/prediction?item_id=1" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "age": 52,
+       "sex": 1,
+       "cp": 0,
+       "trestbps": 125,
+       "chol": 212,
+       "fbs": 0,
+       "restecg": 1,
+       "thalach": 168,
+       "exang": 0,
+       "oldpeak": 1.0,
+       "slope": 2,
+       "ca": 2,
+       "thal": 3
+     }'</p>
+<p>Ожидаемый ответ:</p>
+<p>{
+  "item_id": 1,
+  "prediction": 0.924144415526309,
+  "status": "success"
+}</p>
+<h2>3. Документация API</h2>
+<p>После запуска сервиса доступна автоматическая документация:</p>
+<ul>
+    <li>Swagger UI: http://localhost:8001/docs</li>
+    <li>ReDoc: http://localhost:8001/redoc</li>
+</ul>
+<h2>Особенности реализации</h2>
+<ul>
+    <li>Поддержка загрузки моделей из локальных файлов (.pkl)</li>
+    <li>Интеграция с MLflow для управления моделями</li>
+    <li>Валидация входных данных через Pydantic схемы</li>
+    <li>Логирование всех операций</li>
+    <li>Обработка ошибок и исключительных ситуаций</li>
+</ul>
